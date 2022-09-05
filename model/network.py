@@ -93,7 +93,7 @@ def get_constr_out_train(x, y, Iplus, Iminus, M, device, label_polarity):
     R = torch.cat((R,M),dim=2)
     R_batch = R.expand(len(x),len(Iplus[0]), len(Iplus[0])+len(v[0]))
     # Compute the final output
-    final_out, f_ind = torch.max(R_batch*V.double(), dim = 2)
+    final_out, _ = torch.max(R_batch*V.double(), dim = 2)
 
     return final_out
 
