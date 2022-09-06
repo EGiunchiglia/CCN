@@ -34,8 +34,6 @@ import pickle
 from model.network import *
 from model.network_func import *
 
-from utils.plots import *
-
 from sklearn.metrics import f1_score, average_precision_score, precision_recall_curve, roc_auc_score, auc
 
 
@@ -95,7 +93,7 @@ hidden_dim = args.hidden_dim
 lr=args.lr
 weight_decay =  args.weight_decay
 max_patience = 20
-path_identifier = 'seed_'+str(args.seed)+'_hidden_dim_'+str(args.hidden_dim)+'_alpha_'+str(args.alpha)+'_weight_decay_'+str(args.weight_decay)+'_batch_size_'+str(args.batch_size)+'_lr_'+str(args.lr)+'_num_layers_'+str(args.num_layers)+'_dropout_'+str(args.dropout)+'_'+args.non_lin
+path_identifier = 'seed_'+str(args.seed)+'_hidden_dim_'+str(args.hidden_dim)+'_weight_decay_'+str(args.weight_decay)+'_batch_size_'+str(args.batch_size)+'_lr_'+str(args.lr)+'_num_layers_'+str(args.num_layers)+'_dropout_'+str(args.dropout)+'_'+args.non_lin
 path_identifier_no_seed = 'hidden_dim_'+str(args.hidden_dim)+'_weight_decay_'+str(args.weight_decay)+'_batch_size_'+str(args.batch_size)+'_lr_'+str(args.lr)+'_num_layers_'+str(args.num_layers)+'_dropout_'+str(args.dropout)+'_'+args.non_lin
 
 
@@ -124,7 +122,7 @@ valX = torch.tensor(scaler.transform(imp_mean.transform(valX.astype(float)))).to
 valY = torch.tensor(valY).to(device)
 different_from_0 = (valY.sum(0)!=0).clone().detach()
 
-print(trainX.shape,testY.shape)
+
 
 #Create loaders 
 train_dataset = [(x, y) for (x, y) in zip(trainX, trainY)]
@@ -191,7 +189,7 @@ for epoch in range(num_epochs):
         for i, (x,y) in enumerate(val_loader):
             x = x.to(device)
             y = y.to(device)
-            constrained_output = model(x.float(),Iplus, Iminus, M,device,alpha)
+            constrained_output = model(x.float(), Iplus, Iminus, M, device)
             val_loss += criterion(constrained_output.double(), y.double())
         val_loss /= float(i+1)
 
@@ -204,15 +202,15 @@ for epoch in range(num_epochs):
 
         if patience==0:
             #Create folder to save hyperparameters if it does not exist
-            if not os.path.exists('one_val_hyp/'+dataset_name):
-                os.makedirs('one_val_hyp/'+dataset_name)
-            if not os.path.exists('one_val_hyp/'+dataset_name):
-                os.makedirs('one_val_hyp/'+dataset_name)
+            if not os.path.exists('hyp/'+dataset_name):
+                os.makedirs('hyp/'+dataset_name)
+            if not os.path.exists('hyp/'+dataset_name):
+                os.makedirs('hyp/'+dataset_name)
             #Save the hyperparameters + value of validation loss on file
             hyp = vars(args)
             hyp['best_epoch'] = epoch-max_patience
             hyp['val_loss'] = min_loss.item()
-            dump_path = 'one_val_hyp/'+dataset_name+'/batch_size'+str(args.batch_size)+'_dropout'+str(args.dropout)+'_hdim'+str(args.hidden_dim)+'_lr'+str(args.lr)+'_nn_lin'+str(non_lin)+'_n_layers'+str(num_layers)+'_w_decay'+str(weight_decay)
+            dump_path = 'hyp/'+dataset_name+'/batch_size'+str(args.batch_size)+'_dropout'+str(args.dropout)+'_hdim'+str(args.hidden_dim)+'_lr'+str(args.lr)+'_nn_lin'+str(non_lin)+'_n_layers'+str(num_layers)+'_w_decay'+str(weight_decay)
             # Store data (serialize)
             with open(dump_path+'.pickle', 'wb') as handle:
                 pickle.dump(hyp, handle, protocol=pickle.HIGHEST_PROTOCOL)
