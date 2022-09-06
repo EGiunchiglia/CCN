@@ -7,12 +7,13 @@ Code and data for the paper "[Multi-Label Classification Neural Networks with Ha
 
 
 ## Reference
+
 ```
 @article{giunchiglia2021,
   author    = {Eleonora Giunchiglia and Thomas Lukasiewicz},
   title     = {Multi-Label Classification Neural Networks with Hard Logical Constraints},
   journal   = {Journal of Artificial Iintelligence Research (JAIR)},
   volume    = {72},
-  year      = {2021},
+  year      = {2021}
 }
-```i 
+```
