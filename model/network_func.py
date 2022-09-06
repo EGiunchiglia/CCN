@@ -54,7 +54,7 @@ def network_eval(model, Iplus, Iminus, M, loader, dataset, write_folder, device,
     if not os.path.exists(write_folder):
         os.makedirs(write_folder)
 
-    f = open(write_folder+dataset+'.csv', 'a')
+    f = open(write_folder+"/"+dataset+'.csv', 'a')
 
     f.write(str(hyp['split'])+','+str(hyp['seed'])+ ',' +str(hyp['best_epoch']) + ',' +str(hyp['hidden_dim']) + ',' + str(hamming) + ',' + str(multilabel_accuracy) + ',' 
             + str(ranking_loss) + ',' + str(cov_error) + ',' + str(avg_precision) + ',' + str(one_err) + ',' + 'END' +  ',' + str(hyp) + '\n')
